@@ -40,9 +40,11 @@ enum Op {
 	OCalLMethod;
 	OCallThis;
 	OCallClosure;
+    //
 	OStaticClosure;
 	OInstanceClosure;
 	OVirtualClosure;
+    //
 	OGetGlobal;
 	OSetGlobal;
 	OField;
