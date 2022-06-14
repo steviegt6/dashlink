@@ -1,6 +1,6 @@
 # _dashlink_
 
-The HashLink disassembler.
+A HashLink disassembler.
 
 ---
 
