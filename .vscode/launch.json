@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "HL/JIT (Launch)",
+      "request": "launch",
+      "type": "hl",
+      "hxml": "dashlink.hxml",
+      "cwd": "${workspaceRoot}",
+      "preLaunchTask": "build"
+    }
+  ]
+}
