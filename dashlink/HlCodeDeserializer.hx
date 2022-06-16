@@ -140,7 +140,8 @@ class HlCodeDeserializer {
 
 		var floats = [];
 		for (i in 0...chunk.nfloats)
-			floats[i] = buffer.readFloat(); // LITTLE ENDIAN
+			// Careful to read a double (f64) instead of a float (f32).
+			floats[i] = buffer.readDouble(); // LITTLE ENDIAN
 
 		var strings = readStrings(buffer, chunk.nstrings);
 
@@ -195,9 +196,6 @@ class HlCodeDeserializer {
 	public static function readStrings(buffer:BufferInput, nstrings:UInt):Array<String> {
 		var strings:Array<String> = [];
 		var stringData:Array<Int> = [];
-
-		// TODO: Figure out why I need to read this byte. It's kind of unnerving.
-		var nbytes = buffer.readInt32();
 		// var stringData = buffer.read(nbytes); // LITTLE ENDIAN
 
 		var count = buffer.readInt32();
