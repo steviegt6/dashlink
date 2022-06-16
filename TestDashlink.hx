@@ -1,4 +1,5 @@
-import dashlink.Test;
+import sys.io.File;
+import dashlink.HlCodeDeserializer;
 import dashlink.Utils;
 import dashlink.Op;
 
@@ -7,7 +8,7 @@ class TestDashlink {
 		trace("Hello, world!");
         trace("OMov nargs: " + Utils.OpNArgs[OMov]);
 
-        var bytes = Test.getFileBytes("hello.hl");
-        trace("Test program bytes:\n" + bytes);
+        var bytes = File.getBytes("hello.hl");
+        var code = HlCodeDeserializer.deserializeFromBytes(bytes);
 	}
 }

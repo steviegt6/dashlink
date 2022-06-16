@@ -10,7 +10,7 @@ import hl.UI8;
  * Core functions for deserializing a HashLink file.
  */
 interface IHlReader {
-	function readSignedVariable():Int;
+	/*function readSignedVariable():Int;
 	function readUnsignedVariable():UInt;
 	function readStrings(nstrings:UInt):Array<String>;
 	function readField():ObjField;
@@ -20,5 +20,5 @@ interface IHlReader {
 	function readType():Type;
 	function readNative():Native;
 	function readFunction(hasDebug:Bool, version:UI8):Function;
-	function readConstantDef():ConstantDef;
+	function readConstantDef():ConstantDef;*/
 }

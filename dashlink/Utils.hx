@@ -1,5 +1,13 @@
 package dashlink;
 
+import haxe.Utf8;
+import haxe.io.Encoding;
+import hl.UI8;
+import dashlink.HlCodeDeserializer.HlCode;
+import haxe.io.BytesInput;
+import haxe.io.BufferInput;
+import haxe.io.Bytes;
+
 /**
  * Miscellaneous utilities for existing classes.
  */
@@ -123,4 +131,46 @@ class Utils {
 		//
 		Op.OLast => 0,
 	];
+
+	/**
+	 * Constructs a `BufferInput` from a `Bytes` instance using a `BytesInput`.
+	 * @param bytes 
+	 * @return BufferInput
+	 */
+	public static function makeByteBuffer(bytes:Bytes):BufferInput {
+		return new BufferInput(new BytesInput(bytes), bytes);
+	}
+
+	public static function arraysEqual(array1:Array<Dynamic>, array2:Array<Dynamic>):Bool {
+		if (array1.length != array2.length)
+			return false;
+
+		for (i in 0...array1.length) {
+			if (array1[i] != array2[i])
+				return false;
+		}
+
+		return true;
+	}
+
+	public static function bytesFromArray(array:Array<UI8>):Bytes {
+		var bytes = Bytes.alloc(array.length);
+
+		for (i in 0...array.length) {
+			bytes.set(i, array[i]);
+		}
+
+		return bytes;
+	}
+
+	public static function stringFromBytes(bytes:Array<Int>):String {
+		var utf = new Utf8();
+
+		// Using String.fromCharCode normally does't work because of black magic.
+		for (i in 0...bytes.length)
+			utf.addChar(bytes[i]); // String.fromCharCode(bytes[i]);
+		
+
+		return utf.toString();
+	}
 }
