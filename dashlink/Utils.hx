@@ -163,14 +163,15 @@ class Utils {
 		return bytes;
 	}
 
+	// TODO: Figure out how to use UnicodeString here.
 	public static function stringFromBytes(bytes:Array<Int>):String {
-		var utf = new Utf8();
+		var str = "";
 
 		// Using String.fromCharCode normally does't work because of black magic.
 		for (i in 0...bytes.length)
-			utf.addChar(bytes[i]); // String.fromCharCode(bytes[i]);
+			str += String.fromCharCode(bytes[i]);
 		
 
-		return utf.toString();
+		return str;
 	}
 }
