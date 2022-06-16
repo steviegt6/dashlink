@@ -195,6 +195,8 @@ class HlCodeDeserializer {
 	public static function readStrings(buffer:BufferInput, nstrings:UInt):Array<String> {
 		var strings:Array<String> = [];
 		var stringData:Array<Int> = [];
+
+		// TODO: Figure out why I need to read this byte. It's kind of unnerving.
 		var nbytes = buffer.readInt32();
 		// var stringData = buffer.read(nbytes); // LITTLE ENDIAN
 
