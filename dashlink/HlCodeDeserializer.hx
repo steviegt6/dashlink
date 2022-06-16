@@ -122,7 +122,7 @@ class HlCodeDeserializer {
 			nints: readVarUInt(buffer),
 			nfloats: readVarUInt(buffer),
 			nstrings: readVarUInt(buffer),
-			nbytes: version >= 5 ? readVarUInt(buffer) : -1, // -1 means unsupported
+			nbytes: version >= 5 ? readVarUInt(buffer) : 0,
 			ntypes: readVarUInt(buffer),
 			nglobals: readVarUInt(buffer),
 			nnatives: readVarUInt(buffer),
@@ -215,17 +215,4 @@ class HlCodeDeserializer {
 
 		return strings;
 	}
-
-	// Figured out you can just specify endianness for the input lol.
-	/*// https://stackoverflow.com/a/13001446
-		// Dunno how endianness works with Haxe and I don't want to have to find out the hard way, so using this to be safe.
-		public static function readLittleEndianInt(buffer:BufferInput):Int {
-			var b1 = buffer.readByte();
-			var b2 = buffer.readByte();
-			var b3 = buffer.readByte();
-			var b4 = buffer.readByte();
-			return b1 | (b2 << 8) | (b3 << 16) | (b4 << 24);
-		}
-
-		public static function readLittleEndianFloat(buffer:BufferInput):Float {} */
 }
