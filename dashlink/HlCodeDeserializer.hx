@@ -175,14 +175,14 @@ class HlCodeDeserializer {
 		var b2 = buffer.readByte();
 
 		if (b1 & 0x40 == 0) {
-			var nextInt = b2 | ((b1 & 0x1F) << 8);
+			var nextInt = b2 | ((b1 & 31) << 8);
 
 			return b1 & 0x20 == 0 ? nextInt : -nextInt;
 		}
 
 		var b3 = buffer.readByte();
 		var b4 = buffer.readByte();
-		var retInt = ((b1 & 0x1F) << 24) | (b2 << 16) | (b3 << 8) | b4;
+		var retInt = ((b1 & 31) << 24) | (b2 << 16) | (b3 << 8) | b4;
 
 		return b1 & 0x20 == 0 ? retInt : -retInt;
 	}
