@@ -1,4 +1,4 @@
-**A majority** of the deserialization and disassembly code is adapted from [Gui-Yom's wonderful Rust dissassembler](https://github.com/Gui-Yom/hlbc.git) under the MIT license.
+**A majority** of the deserialization/disassembly code is adapted from [**@Gui-Yom's**](https://github.com/Gui-Yom) [wonderful Rust dissassembler](https://github.com/Gui-Yom/hlbc.git) under the MIT license.
 
 ---
 
