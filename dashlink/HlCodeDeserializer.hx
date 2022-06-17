@@ -31,10 +31,10 @@ typedef ReadChunk = {
 
 typedef ReadBody = {
 	var ints:Array<Int>;
-    var floats:Array<Float>;
-    var strings:Array<String>;
-    // bytes
-    var debugFiles:Array<String>;
+	var floats:Array<Float>;
+	var strings:Array<String>;
+	// bytes
+	var debugFiles:Array<String>;
 }
 
 class HlCodeDeserializer {
@@ -84,9 +84,9 @@ class HlCodeDeserializer {
 		var chunk = readChunk(buffer, ignoreMaxVersion);
 		var body = readBody(buffer, chunk);
 
-        trace("Chunk: " + chunk);
-        trace("Body: " + body);
-        trace("Code (unused): " + code);
+		trace("Chunk: " + chunk);
+		trace("Body: " + body);
+		trace("Code (unused): " + code);
 
 		return code;
 	}
@@ -145,43 +145,46 @@ class HlCodeDeserializer {
 
 		var strings = readStrings(buffer, chunk.nstrings);
 
-		if (chunk.version >= 5)
-			throw "TODO: Add byte reading.";
+		var bytes = [];
+		if (chunk.version >= 5) {
+			var size = buffer.readInt32(); // LITTLE ENDIAN
+
+			for (i in 0...size)
+				bytes[i] = buffer.readByte();
+		}
 
 		var debugFiles = chunk.version >= 5 ? readStrings(buffer, readVarUInt(buffer)) : null;
 
 		var body:ReadBody = {
 			ints: ints,
-            floats: floats,
-            strings: strings,
-            // bytes
-            debugFiles: debugFiles
+			floats: floats,
+			strings: strings,
+			// bytes
+			debugFiles: debugFiles
 		};
 		return body;
 	}
 
-	// TODO: Clean up and use bX variable naming.
 	public static function readVarInt(buffer:BufferInput):Int {
-		var varInt = buffer.readByte();
+		var b1 = buffer.readByte();
 
-		if (varInt & 0x80 == 0) {
-			return varInt & 0x7F;
+		if (b1 & 0x80 == 0) {
+			return b1 & 0x7F;
 		}
 
-		if (varInt & 0x40 == 0) {
-			var nextInt = buffer.readByte() | ((varInt & 31) << 8);
+		var b2 = buffer.readByte();
 
-			if (varInt & 0x20 == 0) {
-				return nextInt;
-			} else {
-				return -nextInt;
-			}
+		if (b1 & 0x40 == 0) {
+			var nextInt = b2 | ((b1 & 0x1F) << 8);
+
+			return b1 & 0x20 == 0 ? nextInt : -nextInt;
 		}
 
-		var bytes = [buffer.readByte(), buffer.readByte(), buffer.readByte()];
-		var retInt = ((varInt & 31) << 24) | (bytes[0] << 16) | (bytes[1] << 8) | bytes[2];
+		var b3 = buffer.readByte();
+		var b4 = buffer.readByte();
+		var retInt = ((b1 & 0x1F) << 24) | (b2 << 16) | (b3 << 8) | b4;
 
-		return varInt & 0x20 == 0 ? retInt : -retInt;
+		return b1 & 0x20 == 0 ? retInt : -retInt;
 	}
 
 	public static function readVarUInt(buffer:BufferInput):UInt {
