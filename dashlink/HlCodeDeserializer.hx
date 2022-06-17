@@ -1,5 +1,10 @@
 package dashlink;
 
+import dashlink.structures.HlConstant;
+import dashlink.structures.HlFunction;
+import dashlink.structures.HlNative;
+import dashlink.structures.HlTypeRef;
+import dashlink.structures.HlType;
 import haxe.io.Encoding;
 import hl.UI8;
 import haxe.io.BufferInput;
@@ -11,6 +16,11 @@ typedef HlCode = {
 	var floats:Array<Float>;
 	var strings:Array<String>;
 	var debugFiles:Array<String>;
+	var types:Array<HlType>;
+	var globals:Array<HlTypeRef>;
+	var natives:Array<HlNative>;
+	var functions:Array<HlFunction>;
+	var constants:Array<HlConstant>;
 }
 
 typedef ReadChunk = {
@@ -83,7 +93,12 @@ class HlCodeDeserializer {
 			ints: [],
 			floats: [],
 			strings: [],
-			debugFiles: null
+			debugFiles: null,
+			types: [],
+			globals: [],
+			natives: [],
+			functions: [],
+			constants: []
 		};
 
 		readHeader(buffer);
@@ -143,7 +158,7 @@ class HlCodeDeserializer {
 		var ints = readInts(buffer, chunk.nints);
 		var floats = readFloats(buffer, chunk.nbytes);
 		var strings = readStrings(buffer, chunk.nstrings);
-		var bytes: BytesChunk = chunk.version >= 5 ? readBytes(buffer, chunk.nbytes) : {bytes: [], bytesPos: []};
+		var bytes:BytesChunk = chunk.version >= 5 ? readBytes(buffer, chunk.nbytes) : {bytes: [], bytesPos: []};
 		var debugFiles = chunk.version >= 5 ? readStrings(buffer, readVarUInt(buffer)) : null;
 
 		var body:ReadBody = {
@@ -204,7 +219,7 @@ class HlCodeDeserializer {
 			// Careful to read a double (f64) instead of a float (f32).
 			floats[i] = buffer.readDouble(); // LITTLE ENDIAN
 
-		return float;
+		return floats;
 	}
 
 	public static function readStrings(buffer:BufferInput, nstrings:UInt):Array<String> {
