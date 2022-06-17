@@ -140,18 +140,10 @@ class HlCodeDeserializer {
 	}
 
 	public static function readBody(buffer:BufferInput, chunk:ReadChunk):ReadBody {
-		var ints = [];
-		for (i in 0...chunk.nints)
-			ints[i] = buffer.readInt32(); // LITTLE ENDIAN
-
-		var floats = [];
-		for (i in 0...chunk.nfloats)
-			// Careful to read a double (f64) instead of a float (f32).
-			floats[i] = buffer.readDouble(); // LITTLE ENDIAN
-
+		var ints = readInts(buffer, chunk.nints);
+		var floats = readFloats(buffer, chunk.nbytes);
 		var strings = readStrings(buffer, chunk.nstrings);
 		var bytes = chunk.version >= 5 ? readBytes(buffer, chunk.nbytes) : [];
-
 		var debugFiles = chunk.version >= 5 ? readStrings(buffer, readVarUInt(buffer)) : null;
 
 		var body:ReadBody = {
@@ -194,6 +186,25 @@ class HlCodeDeserializer {
 			throw "VarUInt cannot be negative! Got \"" + varInt + "\".";
 
 		return varInt;
+	}
+
+	public static function readInts(buffer:BufferInput, nints:UInt):Array<Int> {
+		var ints = [];
+
+		for (i in 0...nints)
+			ints[i] = buffer.readInt32(); // LITTLE ENDIAN
+
+		return ints;
+	}
+
+	public static function readFloats(buffer:BufferInput, nfloats:UInt):Array<Float> {
+		var floats = [];
+
+		for (i in 0...nfloats)
+			// Careful to read a double (f64) instead of a float (f32).
+			floats[i] = buffer.readDouble(); // LITTLE ENDIAN
+
+		return float;
 	}
 
 	public static function readStrings(buffer:BufferInput, nstrings:UInt):Array<String> {
