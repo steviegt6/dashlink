@@ -33,8 +33,14 @@ typedef ReadBody = {
 	var ints:Array<Int>;
 	var floats:Array<Float>;
 	var strings:Array<String>;
-	// bytes
+	var bytes:Array<UI8>;
+	var bytesPos:Array<Int>;
 	var debugFiles:Array<String>;
+}
+
+typedef BytesChunk = {
+	var bytes:Array<UI8>;
+	var bytesPos:Array<Int>;
 }
 
 class HlCodeDeserializer {
@@ -144,14 +150,7 @@ class HlCodeDeserializer {
 			floats[i] = buffer.readDouble(); // LITTLE ENDIAN
 
 		var strings = readStrings(buffer, chunk.nstrings);
-
-		var bytes = [];
-		if (chunk.version >= 5) {
-			var size = buffer.readInt32(); // LITTLE ENDIAN
-
-			for (i in 0...size)
-				bytes[i] = buffer.readByte();
-		}
+		var bytes = chunk.version >= 5 ? readBytes(buffer, chunk.nbytes) : [];
 
 		var debugFiles = chunk.version >= 5 ? readStrings(buffer, readVarUInt(buffer)) : null;
 
@@ -159,7 +158,8 @@ class HlCodeDeserializer {
 			ints: ints,
 			floats: floats,
 			strings: strings,
-			// bytes
+			bytes: bytes.bytes,
+			bytesPos: bytes.bytesPos,
 			debugFiles: debugFiles
 		};
 		return body;
@@ -217,5 +217,23 @@ class HlCodeDeserializer {
 		}
 
 		return strings;
+	}
+
+	public static function readBytes(buffer:BufferInput, nbytes:UInt):BytesChunk {
+		var bytes:Array<UI8> = [];
+		var bytesPos = [];
+		var size = buffer.readInt32(); // LITTLE ENDIAN
+
+		for (i in 0...size)
+			bytes[i] = buffer.readByte();
+
+		for (i in 0...nbytes)
+			bytesPos[i] = readVarUInt(buffer);
+
+		var chunk:BytesChunk = {
+			bytes: bytes,
+			bytesPos: bytesPos
+		};
+		return chunk;
 	}
 }
