@@ -143,7 +143,7 @@ class HlCodeDeserializer {
 		var ints = readInts(buffer, chunk.nints);
 		var floats = readFloats(buffer, chunk.nbytes);
 		var strings = readStrings(buffer, chunk.nstrings);
-		var bytes = chunk.version >= 5 ? readBytes(buffer, chunk.nbytes) : [];
+		var bytes: BytesChunk = chunk.version >= 5 ? readBytes(buffer, chunk.nbytes) : {bytes: [], bytesPos: []};
 		var debugFiles = chunk.version >= 5 ? readStrings(buffer, readVarUInt(buffer)) : null;
 
 		var body:ReadBody = {
