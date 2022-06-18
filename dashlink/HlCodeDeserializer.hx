@@ -1,5 +1,6 @@
 package dashlink;
 
+import dashlink.structures.HlObjProto;
 import dashlink.structures.HlConstant;
 import dashlink.structures.HlFunction;
 import dashlink.structures.HlNative;
@@ -51,6 +52,15 @@ typedef ReadBody = {
 typedef BytesChunk = {
 	var bytes:Array<UI8>;
 	var bytesPos:Array<Int>;
+}
+
+typedef PartialBody = {
+	var ints:Array<Int>;
+	var floats:Array<Float>;
+	var strings:Array<String>;
+	var bytes:Array<UI8>;
+	var bytesPos:Array<Int>;
+	var debugFiles:Array<String>;
 }
 
 class HlCodeDeserializer {
@@ -161,6 +171,15 @@ class HlCodeDeserializer {
 		var bytes:BytesChunk = chunk.version >= 5 ? readBytes(buffer, chunk.nbytes) : {bytes: [], bytesPos: []};
 		var debugFiles = chunk.version >= 5 ? readStrings(buffer, readVarUInt(buffer)) : null;
 
+		var partialBody:PartialBody = {
+			ints: ints,
+			floats: floats,
+			strings: strings,
+			bytes: bytes.bytes,
+			bytesPos: bytes.bytesPos,
+			debugFiles: debugFiles
+		};
+
 		var body:ReadBody = {
 			ints: ints,
 			floats: floats,
@@ -261,5 +280,82 @@ class HlCodeDeserializer {
 			bytesPos: bytesPos
 		};
 		return chunk;
+	}
+
+	public static function readTypes(buffer:BufferInput, ntypes:UInt, partialBody:PartialBody):Array<HlType> {
+		var types = [];
+
+		for (_ in 0...ntypes) {
+			var type = readType(buffer, partialBody);
+			types.push(type);
+		}
+
+		return types;
+	}
+
+	public static function readType(buffer:BufferInput, partialBody:PartialBody):HlType {
+		var tType = buffer.readByte();
+
+		switch (tType) {
+			case 10:
+				var nargs = buffer.readByte();
+				var args = [];
+
+				for (_ in 0...nargs)
+					args.push(readTypeRef(buffer));
+
+				return HlType.Fun(args, readTypeRef(buffer));
+
+			case 20:
+				var nargs = buffer.readByte();
+				var args = [];
+
+				for (_ in 0...nargs)
+					args.push(readTypeRef(buffer));
+
+				return HlType.Method(args, readTypeRef(buffer));
+
+			case 11:
+				var name = partialBody.strings[readVarInt(buffer)];
+				var zuper = readVarInt(buffer);
+				var global = readVarUInt(buffer);
+				var nfields = readVarUInt(buffer);
+				var nprotos = readVarUInt(buffer);
+				var nbindings = readVarUInt(buffer);
+
+				var fields = [];
+				for (_ in 0...nfields)
+					fields.push(readField(buffer, partialBody.strings));
+
+				var protos:Array<HlObjProto> = [];
+				for (_ in 0...nprotos)
+					protos.push({
+						name: partialBody.strings[readVarInt(buffer)],
+						findex: readVarUInt(buffer),
+						pindex: readVarInt(buffer)
+					});
+
+				var bindings:Array<Bindings> = [];
+				for (_ in 0...nbindings)
+					bindings.push({one: readVarUInt(buffer), two: readVarUInt(buffer)});
+
+				return HlType.Obj(name, zuper < 0 ? null : {typeRef: zuper}, fields, protos, bindings);
+
+			case 14:
+
+			case 15:
+
+			case 17:
+
+			case 18:
+
+			case 21:
+
+			default:
+				if (tType >= 22)
+					throw "Unknown type: " + tType;
+		}
+
+		return null;
 	}
 }
