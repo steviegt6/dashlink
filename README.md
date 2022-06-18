@@ -10,7 +10,7 @@ Dashlink, stylized as **dashlink**, is a disassembler for [HashLink](https://git
 
 ## Practical Uses
 
-This may be used for reverse-engineer Haxe programs compiled to HashLink bytecode (for whatever reason that's needed), programmatically creating HashLink programs for various utility purposes, or for dynamically rewriting/otherwise modifying programs. One such example of the various latter is using a bootstrapper to weave together external assemblies at runtime.
+This may be used for reverse-engineering Haxe programs compiled to HashLink bytecode (for whatever reason that's needed), programmatically creating HashLink programs for various utility purposes, or for dynamically rewriting/otherwise modifying programs. One such example of the latter is using a bootstrapper to weave together external assemblies at runtime.
 
 ## Extra Resources
 
