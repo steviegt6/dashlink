@@ -63,8 +63,13 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 	// region main structure reading
 
 	public function readMainStructure(buffer:Input):MainStructure {
+        // TODO: Just set to little endian ourselves?
+        if (buffer.bigEndian)
+            throw new BytecodeDeserializationException("Big endian deserialization is not supported, use little endian");
+
 		var data = readDataStructure(buffer);
 		var content = readContentStructure(buffer, data);
+
 		return {
 			data: data,
 			content: content
