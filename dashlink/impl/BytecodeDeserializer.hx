@@ -1,5 +1,7 @@
 package dashlink.impl;
 
+import dashlink.structures.ContentStructure;
+import dashlink.structures.DataStructure;
 import dashlink.structures.MainStructure;
 import dashlink.exceptions.BytecodeDeserializationException;
 import haxe.exceptions.NotImplementedException;
@@ -41,7 +43,7 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 		return b1 & 0x20 == 0 ? value : -value;
 	}
 
-    /**
+	/**
 	 * Reads a variable sized signed integer.
 	 * 
 	 * https://github.com/Gui-Yom/hlbc/wiki/Bytecode-file-format#variable-sized-integers
@@ -49,21 +51,51 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 	 * @return Int The integer value. Unsigned but the returned value may be expected to have the same upper limit as an Int.
 	 */
 	public function readVarUInt(buffer:Input):Int {
-        var value = readVarInt(buffer);
+		var value = readVarInt(buffer);
 
-        if (value < 0)
-            throw new BytecodeDeserializationException("Variable sized unsigned integer cannot be negative, got " + value);
+		if (value < 0)
+			throw new BytecodeDeserializationException("Variable sized unsigned integer cannot be negative, got " + value);
 
-        return value;
-    }
+		return value;
+	}
 
 	// endregion
+	// region main structure reading
 
 	public function readMainStructure(buffer:Input):MainStructure {
 		throw new haxe.exceptions.NotImplementedException();
 	}
 
+	/**
+	 * Reads the data portion of the main structure.
+	 * @param buffer The buffer to read from.
+	 * @return DataStructure The read data.
+	 */
+	public function readDataStructure(buffer:Input):DataStructure {
+		throw new haxe.exceptions.NotImplementedException();
+	}
+
+	/**
+	 * Reads the content portion of the main structure.
+	 * @param buffer The buffer to read from.
+	 * @param data The data to use when reading the content.
+	 * @return ContentStructure The read content.
+	 */
+	public function readContentStructure(buffer:Input, data:DataStructure):ContentStructure {
+		throw new haxe.exceptions.NotImplementedException();
+	}
+
+	/**
+	 * Reads a strings block
+	 * 
+	 * https://github.com/Gui-Yom/hlbc/wiki/Bytecode-file-format#strings-block
+	 * @param buffer The buffer to read from.
+	 * @param nstrings The amount of strings to read.
+	 * @return Array<String>
+	 */
 	public function readStringsBlock(buffer:Input, nstrings:Int):Array<String> {
 		throw new haxe.exceptions.NotImplementedException();
 	}
+
+	// endregion
 }

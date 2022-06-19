@@ -1,5 +1,7 @@
 package dashlink.api;
 
+import dashlink.structures.ContentStructure;
+import dashlink.structures.DataStructure;
 import dashlink.structures.MainStructure;
 import haxe.io.Input;
 
@@ -36,16 +38,31 @@ interface IBytecodeDeserializer {
 	 * Deserializes the main structure of this bytecode file. Essentially reads the entire file.
 	 * 
 	 * https://github.com/Gui-Yom/hlbc/wiki/Bytecode-file-format#main-structure
-	 * @param buffer 
+	 * @param buffer The buffer to read from.
 	 * @return MainStructure The file represented as a collection of objects.
 	 */
 	function readMainStructure(buffer:Input):MainStructure;
+
+    /**
+     * Reads the data portion of the main structure.
+     * @param buffer The buffer to read from.
+     * @return DataStructure The read data.
+     */
+    function readDataStructure(buffer:Input):DataStructure;
+
+    /**
+     * Reads the content portion of the main structure.
+     * @param buffer The buffer to read from.
+     * @param data The data to use when reading the content.
+     * @return ContentStructure The read content.
+     */
+    function readContentStructure(buffer:Input, data:DataStructure):ContentStructure;
 
 	/**
 	 * Reads a strings block
 	 * 
 	 * https://github.com/Gui-Yom/hlbc/wiki/Bytecode-file-format#strings-block
-	 * @param buffer 
+	 * @param buffer The buffer to read from.
 	 * @param nstrings The amount of strings to read.
 	 * @return Array<String>
 	 */
