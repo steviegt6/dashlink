@@ -43,34 +43,20 @@ interface IBytecodeDeserializer {
 	 */
 	function readMainStructure(buffer:Input):MainStructure;
 
-    /**
-     * Reads the header of a file.
-     * @param buffer The buffer to read from.
-     * @return Array<Int> A byte array containing the values of the read bytes.
-     */
-    function readHeader(buffer:Input):Array<Int>;
+	/**
+	 * Reads the data portion of the main structure.
+	 * @param buffer The buffer to read from.
+	 * @return DataStructure The read data.
+	 */
+	function readDataStructure(buffer:Input):DataStructure;
 
-    /**
-     * Reads the version of a file.
-     * @param buffer The buffer to read from.
-     * @return Int A byte representing the version.
-     */
-    function readVersion(buffer:Input):Int;
-
-    /**
-     * Reads the data portion of the main structure.
-     * @param buffer The buffer to read from.
-     * @return DataStructure The read data.
-     */
-    function readDataStructure(buffer:Input):DataStructure;
-
-    /**
-     * Reads the content portion of the main structure.
-     * @param buffer The buffer to read from.
-     * @param data The data to use when reading the content.
-     * @return ContentStructure The read content.
-     */
-    function readContentStructure(buffer:Input, data:DataStructure):ContentStructure;
+	/**
+	 * Reads the content portion of the main structure.
+	 * @param buffer The buffer to read from.
+	 * @param data The data to use when reading the content.
+	 * @return ContentStructure The read content.
+	 */
+	function readContentStructure(buffer:Input, data:DataStructure):ContentStructure;
 
 	/**
 	 * Reads a strings block
@@ -81,6 +67,47 @@ interface IBytecodeDeserializer {
 	 * @return Array<String>
 	 */
 	function readStringsBlock(buffer:Input, nstrings:Int):Array<String>;
+
+	// endregion
+	// region utility readers
+
+	/**
+	 * Reads the header of a file.
+	 * @param buffer The buffer to read from.
+	 * @return Array<Int> A byte array containing the values of the read bytes.
+	 */
+	function readHeader(buffer:Input):Array<Int>;
+
+	/**
+	 * Reads the version of a file.
+	 * @param buffer The buffer to read from.
+	 * @return Int A byte representing the version.
+	 */
+	function readVersion(buffer:Input):Int;
+
+	/**
+	 * Reads a collection of int32s given a known count.
+	 * @param buffer The buffer to read from.
+	 * @param nints The amount of int32s to read.
+	 * @return Array<Int> The collection of int32s.
+	 */
+	function readInts(buffer:Input, nints:Int):Array<Int>;
+
+	/**
+	 * Reads a collection of float64s given a known count.
+	 * @param buffer The buffer to read from.
+	 * @param nfloats The amount of float64s to read.
+	 * @return Array<Float> The collection of float64s.
+	 */
+	function readFloats(buffer:Input, nfloats:Int):Array<Float>;
+
+	/**
+	 * Reads and decodes a collection of strings given a known count.
+	 * @param buffer The buffer to read from.
+	 * @param nstrings The amount of strings to read.
+	 * @return Array<String> The collection of strings.
+	 */
+	function readStrings(buffer:Input, nstrings:Int):Array<String>;
 
 	// endregion
 }

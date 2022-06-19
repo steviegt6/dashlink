@@ -79,6 +79,69 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 	}
 
 	/**
+	 * Reads the data portion of the main structure.
+	 * @param buffer The buffer to read from.
+	 * @return DataStructure The read data.
+	 */
+	public function readDataStructure(buffer:Input):DataStructure {
+		var header = readHeader(buffer);
+		var version = readVersion(buffer);
+		var flags = readVarUInt(buffer);
+		var nints = readVarUInt(buffer);
+		var nfloats = readVarUInt(buffer);
+		var nstrings = readVarUInt(buffer);
+		var nbytes = version >= 5 ? readVarUInt(buffer) : 0;
+		var ntypes = readVarUInt(buffer);
+		var nglobals = readVarUInt(buffer);
+		var nnatives = readVarUInt(buffer);
+		var nfunctions = readVarUInt(buffer);
+		var nconstants = version >= 4 ? readVarUInt(buffer) : 0;
+		var entrypoint = readVarUInt(buffer);
+		// var hasDebug = flags & 1;
+
+		return {
+			magic: header,
+			version: version,
+			flags: flags,
+			nints: nints,
+			nfloats: nfloats,
+			nstrings: nstrings,
+			nbytes: nbytes,
+			ntypes: ntypes,
+			nglobals: nglobals,
+			nnatives: nnatives,
+			nfunctions: nfunctions,
+			nconstants: nconstants,
+			entrypoint: entrypoint,
+		};
+	}
+
+	/**
+	 * Reads the content portion of the main structure.
+	 * @param buffer The buffer to read from.
+	 * @param data The data to use when reading the content.
+	 * @return ContentStructure The read content.
+	 */
+	public function readContentStructure(buffer:Input, data:DataStructure):ContentStructure {
+		throw new haxe.exceptions.NotImplementedException();
+	}
+
+	/**
+	 * Reads a strings block
+	 * 
+	 * https://github.com/Gui-Yom/hlbc/wiki/Bytecode-file-format#strings-block
+	 * @param buffer The buffer to read from.
+	 * @param nstrings The amount of strings to read.
+	 * @return Array<String>
+	 */
+	public function readStringsBlock(buffer:Input, nstrings:Int):Array<String> {
+		throw new haxe.exceptions.NotImplementedException();
+	}
+
+	// endregion
+	// region utility readers
+
+	/**
 	 * Reads the header of a file.
 	 * @param buffer The buffer to read from.
 	 * @return Array<Int> A byte array containing the values of the read bytes.
@@ -112,62 +175,32 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 	}
 
 	/**
-	 * Reads the data portion of the main structure.
+	 * Reads a collection of int32s given a known count.
 	 * @param buffer The buffer to read from.
-	 * @return DataStructure The read data.
+	 * @param nints The amount of int32s to read.
+	 * @return Array<Int> The collection of int32s.
 	 */
-	public function readDataStructure(buffer:Input):DataStructure {
-		var header = readHeader(buffer);
-		var version = readVersion(buffer);
-        var flags = readVarUInt(buffer);
-        var nints = readVarUInt(buffer);
-        var nfloats = readVarUInt(buffer);
-        var nstrings = readVarUInt(buffer);
-        var nbytes = version >= 5 ? readVarUInt(buffer) : 0;
-        var ntypes = readVarUInt(buffer);
-        var nglobals = readVarUInt(buffer);
-        var nnatives = readVarUInt(buffer);
-        var nfunctions = readVarUInt(buffer);
-        var nconstants = version >= 4 ? readVarUInt(buffer) : 0;
-        var entrypoint = readVarUInt(buffer);
-        // var hasDebug = flags & 1;
-
-		return {
-            magic: header,
-            version: version,
-            flags: flags,
-            nints: nints,
-            nfloats: nfloats,
-            nstrings: nstrings,
-            nbytes: nbytes,
-            ntypes: ntypes,
-            nglobals: nglobals,
-            nnatives: nnatives,
-            nfunctions: nfunctions,
-            nconstants: nconstants,
-            entrypoint: entrypoint,
-        };
-	}
-
-	/**
-	 * Reads the content portion of the main structure.
-	 * @param buffer The buffer to read from.
-	 * @param data The data to use when reading the content.
-	 * @return ContentStructure The read content.
-	 */
-	public function readContentStructure(buffer:Input, data:DataStructure):ContentStructure {
+	public function readInts(buffer:Input, nints:Int):Array<Int> {
 		throw new haxe.exceptions.NotImplementedException();
 	}
 
 	/**
-	 * Reads a strings block
-	 * 
-	 * https://github.com/Gui-Yom/hlbc/wiki/Bytecode-file-format#strings-block
+	 * Reads a collection of float64s given a known count.
+	 * @param buffer The buffer to read from.
+	 * @param nfloats The amount of float64s to read.
+	 * @return Array<Float> The collection of float64s.
+	 */
+	public function readFloats(buffer:Input, nfloats:Int):Array<Float> {
+		throw new haxe.exceptions.NotImplementedException();
+	}
+
+	/**
+	 * Reads and decodes a collection of strings given a known count.
 	 * @param buffer The buffer to read from.
 	 * @param nstrings The amount of strings to read.
-	 * @return Array<String>
+	 * @return Array<String> The collection of strings.
 	 */
-	public function readStringsBlock(buffer:Input, nstrings:Int):Array<String> {
+	public function readStrings(buffer:Input, nstrings:Int):Array<String> {
 		throw new haxe.exceptions.NotImplementedException();
 	}
 
