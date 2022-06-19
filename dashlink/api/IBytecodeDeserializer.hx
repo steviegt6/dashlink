@@ -44,6 +44,13 @@ interface IBytecodeDeserializer {
 	function readMainStructure(buffer:Input):MainStructure;
 
     /**
+     * Reads the header of a file.
+     * @param buffer The buffer to read from.
+     * @return Array<Int> A byte array containing the values of the read bytes.
+     */
+    function readHeader(buffer:Input):Array<Int>;
+
+    /**
      * Reads the data portion of the main structure.
      * @param buffer The buffer to read from.
      * @return DataStructure The read data.

@@ -63,9 +63,9 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 	// region main structure reading
 
 	public function readMainStructure(buffer:Input):MainStructure {
-        // TODO: Just set to little endian ourselves?
-        if (buffer.bigEndian)
-            throw new BytecodeDeserializationException("Big endian deserialization is not supported, use little endian");
+		// TODO: Just set to little endian ourselves?
+		if (buffer.bigEndian)
+			throw new BytecodeDeserializationException("Big endian deserialization is not supported, use little endian");
 
 		var data = readDataStructure(buffer);
 		var content = readContentStructure(buffer, data);
@@ -77,11 +77,27 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 	}
 
 	/**
+	 * Reads the header of a file.
+	 * @param buffer The buffer to read from.
+	 * @return Array<Int> A byte array containing the values of the read bytes.
+	 */
+	public function readHeader(buffer:Input):Array<Int> {
+		var header = [buffer.readByte(), buffer.readByte(), buffer.readByte()];
+
+		if (!Utils.arraysEqual(header, HlCodeDeserializer.magicHeader))
+			throw new BytecodeDeserializationException("Did not match magic header \"" + HlCodeDeserializer.magicHeader.toString() + "\", got \"" + header.toString());
+
+		trace("Got magic header " + header.toString());
+		return header;
+	}
+
+	/**
 	 * Reads the data portion of the main structure.
 	 * @param buffer The buffer to read from.
 	 * @return DataStructure The read data.
 	 */
 	public function readDataStructure(buffer:Input):DataStructure {
+        var header = readHeader(buffer);
 		throw new haxe.exceptions.NotImplementedException();
 	}
 
