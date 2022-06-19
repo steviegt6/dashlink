@@ -1,14 +1,16 @@
+import dashlink.impl.BytecodeDeserializer;
+import dashlink.api.IBytecodeDeserializer;
 import sys.io.File;
-import dashlink.HlCodeDeserializer;
 import dashlink.Utils;
 import dashlink.Op;
 
 class TestDashlink {
 	public static function main():Void {
-		trace("Hello, world!");
-        trace("OMov nargs: " + Utils.OpNArgs[OMov]);
-
+        var deserializer:IBytecodeDeserializer = new BytecodeDeserializer();
         var bytes = File.getBytes("hello.hl");
-        var code = HlCodeDeserializer.deserializeFromBytes(bytes);
+        var buffer = Utils.makeByteBuffer(bytes);
+        buffer.bigEndian = false; // We want little endian for deserialization..
+        var code = deserializer.readMainStructure(buffer);
+        trace(code);
 	}
 }

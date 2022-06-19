@@ -9,6 +9,8 @@ import haxe.io.Input;
 import dashlink.api.IBytecodeDeserializer;
 
 class BytecodeDeserializer implements IBytecodeDeserializer {
+	public function new() {}
+
 	// region variable interfer reading
 
 	/**
@@ -98,16 +100,16 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 	 * @return Int A byte representing the version.
 	 */
 	public function readVersion(buffer:Input):Int {
-        var version = buffer.readByte();
+		var version = buffer.readByte();
 
-        if (version < HlCodeDeserializer.minVersion)
-            throw new BytecodeDeserializationException("Version " + version + " is too old, minimum is " + HlCodeDeserializer.minVersion);
+		if (version < HlCodeDeserializer.minVersion)
+			throw new BytecodeDeserializationException("Version " + version + " is too old, minimum is " + HlCodeDeserializer.minVersion);
 
-        if (version > HlCodeDeserializer.maxVersion)
-            throw new BytecodeDeserializationException("Version " + version + " is too new, maximum is " + HlCodeDeserializer.maxVersion);
+		if (version > HlCodeDeserializer.maxVersion)
+			throw new BytecodeDeserializationException("Version " + version + " is too new, maximum is " + HlCodeDeserializer.maxVersion);
 
-        return version;
-    }
+		return version;
+	}
 
 	/**
 	 * Reads the data portion of the main structure.
