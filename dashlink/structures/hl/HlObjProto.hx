@@ -1,4 +1,4 @@
-package dashlink.structures;
+package dashlink.structures.hl;
 
 typedef HlObjProto = {
 	var name:String;

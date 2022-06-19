@@ -1,4 +1,4 @@
-package dashlink.structures;
+package dashlink.structures.hl;
 
 import dashlink.Op;
 

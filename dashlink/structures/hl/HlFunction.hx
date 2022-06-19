@@ -1,7 +1,7 @@
-package dashlink.structures;
+package dashlink.structures.hl;
 
-import dashlink.structures.HlOpcode;
-import dashlink.structures.HlTypeRef;
+import dashlink.structures.hl.HlOpcode;
+import dashlink.structures.hl.HlTypeRef;
 
 typedef HlFunction = {
 	var t:HlTypeRef;

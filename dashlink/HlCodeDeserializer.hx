@@ -1,11 +1,11 @@
 package dashlink;
 
-import dashlink.structures.HlObjProto;
-import dashlink.structures.HlConstant;
-import dashlink.structures.HlFunction;
-import dashlink.structures.HlNative;
-import dashlink.structures.HlTypeRef;
-import dashlink.structures.HlType;
+import dashlink.structures.hl.HlObjProto;
+import dashlink.structures.hl.HlConstant;
+import dashlink.structures.hl.HlFunction;
+import dashlink.structures.hl.HlNative;
+import dashlink.structures.hl.HlTypeRef;
+import dashlink.structures.hl.HlType;
 import haxe.io.Encoding;
 import hl.UI8;
 import haxe.io.BufferInput;

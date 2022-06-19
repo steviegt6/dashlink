@@ -1,10 +1,10 @@
 package dashlink;
 
-import dashlink.structures.HlConstant;
-import dashlink.structures.HlFunction;
-import dashlink.structures.HlNative;
-import dashlink.structures.HlTypeRef;
-import dashlink.structures.HlType;
+import dashlink.structures.hl.HlConstant;
+import dashlink.structures.hl.HlFunction;
+import dashlink.structures.hl.HlNative;
+import dashlink.structures.hl.HlTypeRef;
+import dashlink.structures.hl.HlType;
 
 /**
  * The main structure of a HashLink bytecode file.

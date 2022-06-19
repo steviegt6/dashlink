@@ -1,4 +1,4 @@
-package dashlink.structures;
+package dashlink.structures.hl;
 
 enum HlType {
 	Void;

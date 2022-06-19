@@ -1,6 +1,6 @@
-package dashlink.structures;
+package dashlink.structures.hl;
 
-import dashlink.structures.HlTypeRef;
+import dashlink.structures.hl.HlTypeRef;
 
 typedef HlEnumConstruct = {
 	var name:String;
