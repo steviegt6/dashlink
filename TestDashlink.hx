@@ -2,7 +2,6 @@ import dashlink.impl.BytecodeDeserializer;
 import dashlink.api.IBytecodeDeserializer;
 import sys.io.File;
 import dashlink.Utils;
-import dashlink.Op;
 
 class TestDashlink {
 	public static function main():Void {

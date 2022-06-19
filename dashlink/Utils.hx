@@ -1,9 +1,6 @@
 package dashlink;
 
-import haxe.Utf8;
-import haxe.io.Encoding;
 import hl.UI8;
-import dashlink.HlCodeDeserializer.HlCode;
 import haxe.io.BytesInput;
 import haxe.io.BufferInput;
 import haxe.io.Bytes;

@@ -119,7 +119,34 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 	public function readDataStructure(buffer:Input):DataStructure {
 		var header = readHeader(buffer);
 		var version = readVersion(buffer);
-		throw new haxe.exceptions.NotImplementedException();
+        var flags = readVarUInt(buffer);
+        var nints = readVarUInt(buffer);
+        var nfloats = readVarUInt(buffer);
+        var nstrings = readVarUInt(buffer);
+        var nbytes = version >= 5 ? readVarUInt(buffer) : 0;
+        var ntypes = readVarUInt(buffer);
+        var nglobals = readVarUInt(buffer);
+        var nnatives = readVarUInt(buffer);
+        var nfunctions = readVarUInt(buffer);
+        var nconstants = version >= 4 ? readVarUInt(buffer) : 0;
+        var entrypoint = readVarUInt(buffer);
+        // var hasDebug = flags & 1;
+
+		return {
+            magic: header,
+            version: version,
+            flags: flags,
+            nints: nints,
+            nfloats: nfloats,
+            nstrings: nstrings,
+            nbytes: nbytes,
+            ntypes: ntypes,
+            nglobals: nglobals,
+            nnatives: nnatives,
+            nfunctions: nfunctions,
+            nconstants: nconstants,
+            entrypoint: entrypoint,
+        };
 	}
 
 	/**

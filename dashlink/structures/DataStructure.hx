@@ -7,9 +7,9 @@ package dashlink.structures;
  */
 typedef DataStructure = {
 	/**
-	 * A string making up the first three bytes of a file, should be "HLB".
+	 * Three bytes representing the header, should be "HLB".
 	 */
-	var magic:String;
+	var magic:Array<Int>;
 
 	/**
 	 * A byte-represented version identifier.
