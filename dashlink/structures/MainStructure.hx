@@ -1,4 +1,4 @@
-package dashlink;
+package dashlink.structures;
 
 import dashlink.structures.hl.HlConstant;
 import dashlink.structures.hl.HlFunction;

@@ -1,5 +1,6 @@
 package dashlink.impl;
 
+import dashlink.structures.MainStructure;
 import dashlink.exceptions.BytecodeDeserializationException;
 import haxe.exceptions.NotImplementedException;
 import haxe.io.Input;

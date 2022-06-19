@@ -1,5 +1,6 @@
 package dashlink.api;
 
+import dashlink.structures.MainStructure;
 import haxe.io.Input;
 
 /**
@@ -29,15 +30,26 @@ interface IBytecodeDeserializer {
 	function readVarUInt(buffer:Input):Int; // Easier to return an Int rather than a UInt.
 
 	// endregion
-
 	// region main structure reading
 
-    /**
-     * Deserializes the main structure of this bytecode file. Essentially reads the entire file.
-     * @param buffer 
-     * @return MainStructure The file represented as a collection of objects.
-     */
-    function readMainStructure(buffer:Input):MainStructure;
+	/**
+	 * Deserializes the main structure of this bytecode file. Essentially reads the entire file.
+	 * 
+	 * https://github.com/Gui-Yom/hlbc/wiki/Bytecode-file-format#main-structure
+	 * @param buffer 
+	 * @return MainStructure The file represented as a collection of objects.
+	 */
+	function readMainStructure(buffer:Input):MainStructure;
+
+	/**
+	 * Reads a strings block
+	 * 
+	 * https://github.com/Gui-Yom/hlbc/wiki/Bytecode-file-format#strings-block
+	 * @param buffer 
+	 * @param nstrings The amount of strings to read.
+	 * @return Array<String>
+	 */
+	function readStringsBlock(buffer:Input, nstrings:Int):Array<String>;
 
 	// endregion
 }
