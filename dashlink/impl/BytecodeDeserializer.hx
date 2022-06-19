@@ -63,7 +63,12 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 	// region main structure reading
 
 	public function readMainStructure(buffer:Input):MainStructure {
-		throw new haxe.exceptions.NotImplementedException();
+		var data = readDataStructure(buffer);
+		var content = readContentStructure(buffer, data);
+		return {
+			data: data,
+			content: content
+		};
 	}
 
 	/**
