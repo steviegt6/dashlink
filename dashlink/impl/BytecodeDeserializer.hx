@@ -85,11 +85,29 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 		var header = [buffer.readByte(), buffer.readByte(), buffer.readByte()];
 
 		if (!Utils.arraysEqual(header, HlCodeDeserializer.magicHeader))
-			throw new BytecodeDeserializationException("Did not match magic header \"" + HlCodeDeserializer.magicHeader.toString() + "\", got \"" + header.toString());
+			throw new BytecodeDeserializationException("Did not match magic header \"" + HlCodeDeserializer.magicHeader.toString() + "\", got \""
+				+ header.toString());
 
 		trace("Got magic header " + header.toString());
 		return header;
 	}
+
+	/**
+	 * Reads the version of a file.
+	 * @param buffer The buffer to read from.
+	 * @return Int A byte representing the version.
+	 */
+	public function readVersion(buffer:Input):Int {
+        var version = buffer.readByte();
+
+        if (version < HlCodeDeserializer.minVersion)
+            throw new BytecodeDeserializationException("Version " + version + " is too old, minimum is " + HlCodeDeserializer.minVersion);
+
+        if (version > HlCodeDeserializer.maxVersion)
+            throw new BytecodeDeserializationException("Version " + version + " is too new, maximum is " + HlCodeDeserializer.maxVersion);
+
+        return version;
+    }
 
 	/**
 	 * Reads the data portion of the main structure.
@@ -97,7 +115,8 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 	 * @return DataStructure The read data.
 	 */
 	public function readDataStructure(buffer:Input):DataStructure {
-        var header = readHeader(buffer);
+		var header = readHeader(buffer);
+		var version = readVersion(buffer);
 		throw new haxe.exceptions.NotImplementedException();
 	}
 

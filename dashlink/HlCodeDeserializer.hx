@@ -73,7 +73,7 @@ class HlCodeDeserializer {
 	/**
 	 * The minimum bytecode version that may be read.
 	 */
-	public static var minVersion(default, null) = 4;
+	public static var minVersion(default, null) = 1;
 
 	/**
 	 * The maximum bytecode version that may be read.

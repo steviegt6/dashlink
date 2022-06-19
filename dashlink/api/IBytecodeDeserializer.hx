@@ -51,6 +51,13 @@ interface IBytecodeDeserializer {
     function readHeader(buffer:Input):Array<Int>;
 
     /**
+     * Reads the version of a file.
+     * @param buffer The buffer to read from.
+     * @return Int A byte representing the version.
+     */
+    function readVersion(buffer:Input):Int;
+
+    /**
      * Reads the data portion of the main structure.
      * @param buffer The buffer to read from.
      * @return DataStructure The read data.
