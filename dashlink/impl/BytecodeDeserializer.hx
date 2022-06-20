@@ -266,7 +266,7 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 
 		// guh
 		var bytesPos = [];
-		for (_ in 0...bytesSize)
+		for (_ in 0...nbytes)
 			bytesPos.push(readVarUInt(buffer)); // LITTLE ENDIAN
 
 		return {
