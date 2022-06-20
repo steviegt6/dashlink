@@ -28,4 +28,5 @@ typedef DataStructure = {
 	var nfunctions:Int;
 	var nconstants:Int;
 	var entrypoint:Int;
+    var hasdebug:Bool;
 }

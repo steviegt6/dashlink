@@ -1,5 +1,6 @@
 package dashlink.api;
 
+import dashlink.structures.DebugData;
 import dashlink.structures.ByteData;
 import dashlink.structures.ContentStructure;
 import dashlink.structures.DataStructure;
@@ -117,6 +118,13 @@ interface IBytecodeDeserializer {
 	 * @return Array<Int> The collection of bytes.
 	 */
 	function readBytes(buffer:Input, nbytes:Int):ByteData;
+
+	/**
+	 * Reads debug data from a file.
+	 * @param buffer The buffer to read from.
+	 * @return DebugData The read debug data.
+	 */
+	function readDebug(buffer:Input):DebugData;
 
 	// endregion
 }

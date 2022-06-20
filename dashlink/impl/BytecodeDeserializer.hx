@@ -1,5 +1,6 @@
 package dashlink.impl;
 
+import dashlink.structures.DebugData;
 import dashlink.structures.ByteData;
 import dashlink.structures.ContentStructure;
 import dashlink.structures.DataStructure;
@@ -98,7 +99,7 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 		var nfunctions = readVarUInt(buffer);
 		var nconstants = version >= 4 ? readVarUInt(buffer) : 0;
 		var entrypoint = readVarUInt(buffer);
-		// var hasDebug = flags & 1;
+		var hasDebug = flags & 1 == 0 ? false : true;
 
 		return {
 			magic: header,
@@ -114,6 +115,7 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 			nfunctions: nfunctions,
 			nconstants: nconstants,
 			entrypoint: entrypoint,
+            hasdebug: hasDebug
 		};
 	}
 
@@ -127,7 +129,8 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 		var ints = readInts(buffer, data.nints);
 		var floats = readFloats(buffer, data.nfloats);
 		var strings = readStrings(buffer, data.nstrings);
-        var bytes = data.version >= 5 ?  readBytes(buffer, data.nbytes) : { bytesData: [], bytesPos: [] } ;
+		var bytes = data.version >= 5 ? readBytes(buffer, data.nbytes) : {bytesData: [], bytesPos: []};
+        var debugData = data.hasdebug ? readDebug(buffer) : { ndebugfiles: 0, debugfiles: [] };
 		throw new haxe.exceptions.NotImplementedException();
 	}
 
@@ -244,7 +247,8 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 		return strings;
 	}
 
-    // TODO: Actually test this implementation.
+	// TODO: Actually test this implementation.
+
 	/**
 	 * Reads a collection of bytes given a known count.
 	 * @param buffer The buffer to read from.
@@ -252,21 +256,36 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 	 * @return Array<Int> The collection of bytes.
 	 */
 	public function readBytes(buffer:Input, nbytes:Int):ByteData {
-        // Fill bytes array with all the bytes, given a size specified at the start.
-        var bytes = [];
-        var bytesSize = buffer.readInt32(); // LITTLE ENDIAN
+		// Fill bytes array with all the bytes, given a size specified at the start.
+		var bytes = [];
+		var bytesSize = buffer.readInt32(); // LITTLE ENDIAN
 
-        for (_ in 0...bytesSize)
-            bytes.push(buffer.readByte()); // LITTLE ENDIAN
+		for (_ in 0...bytesSize)
+			bytes.push(buffer.readByte()); // LITTLE ENDIAN
 
-        // guh
-        var bytesPos = [];
-        for (_ in 0...bytesSize)
-            bytesPos.push(readVarUInt(buffer)); // LITTLE ENDIAN
+		// guh
+		var bytesPos = [];
+		for (_ in 0...bytesSize)
+			bytesPos.push(readVarUInt(buffer)); // LITTLE ENDIAN
+
+		return {
+			bytesData: bytes,
+			bytesPos: bytesPos
+		};
+	}
+
+	/**
+	 * Reads debug data from a file.
+	 * @param buffer The buffer to read from.
+	 * @return DebugData The read debug data.
+	 */
+	public function readDebug(buffer:Input):DebugData {
+        var ndebugfiles = readVarUInt(buffer);
+        var debugfiles = readStrings(buffer, ndebugfiles);
 
         return {
-            bytesData: bytes,
-            bytesPos: bytesPos
+            ndebugfiles: ndebugfiles,
+            debugfiles: debugfiles
         };
     }
 
