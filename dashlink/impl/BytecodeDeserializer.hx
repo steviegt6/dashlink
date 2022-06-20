@@ -1,5 +1,6 @@
 package dashlink.impl;
 
+import dashlink.structures.ByteData;
 import dashlink.structures.ContentStructure;
 import dashlink.structures.DataStructure;
 import dashlink.structures.MainStructure;
@@ -123,9 +124,10 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 	 * @return ContentStructure The read content.
 	 */
 	public function readContentStructure(buffer:Input, data:DataStructure):ContentStructure {
-        var ints = readInts(buffer, data.nints);
-        var floats = readFloats(buffer, data.nfloats);
-        var strings = readStrings(buffer, data.nstrings);
+		var ints = readInts(buffer, data.nints);
+		var floats = readFloats(buffer, data.nfloats);
+		var strings = readStrings(buffer, data.nstrings);
+        var bytes = data.version >= 5 ?  readBytes(buffer, data.nbytes) : { bytesData: [], bytesPos: [] } ;
 		throw new haxe.exceptions.NotImplementedException();
 	}
 
@@ -184,12 +186,12 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 	 * @return Array<Int> The collection of int32s.
 	 */
 	public function readInts(buffer:Input, nints:Int):Array<Int> {
-        var ints = [];
+		var ints = [];
 
-        for (_ in 0...nints)
-            ints.push(buffer.readInt32()); // LITTLE ENDIAN
+		for (_ in 0...nints)
+			ints.push(buffer.readInt32()); // LITTLE ENDIAN
 
-        return ints;
+		return ints;
 	}
 
 	/**
@@ -199,12 +201,12 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 	 * @return Array<Float> The collection of float64s.
 	 */
 	public function readFloats(buffer:Input, nfloats:Int):Array<Float> {
-        var floats = [];
+		var floats = [];
 
-        for (_ in 0...nfloats)
-            floats.push(buffer.readDouble()); // LITTLE ENDIAN, this is a float64
+		for (_ in 0...nfloats)
+			floats.push(buffer.readDouble()); // LITTLE ENDIAN, this is a float64
 
-        return floats;
+		return floats;
 	}
 
 	/**
@@ -214,33 +216,59 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 	 * @return Array<String> The collection of strings.
 	 */
 	public function readStrings(buffer:Input, nstrings:Int):Array<String> {
-        var strings = [];
+		var strings = [];
 
-        // Byte data representing every stored character.
-        // The data after this describes the length of each string, which we use to get the saved strings.
-        var stringData = [];
+		// Byte data representing every stored character.
+		// The data after this describes the length of each string, which we use to get the saved strings.
+		var stringData = [];
 
-        // Actually read each string length.
-        var count = buffer.readInt32(); // LITTLE ENDIAN
-        for (_ in 0...count)
-            stringData.push(buffer.readByte()); // LITTLE ENDIAN
+		// Actually read each string length.
+		var count = buffer.readInt32(); // LITTLE ENDIAN
+		for (_ in 0...count)
+			stringData.push(buffer.readByte()); // LITTLE ENDIAN
 
-        // We want to read every string, we know the amoutn from the passed parameter.
-        // Represents the stringsData array offset.
-        var arrayOffset = 0;
-        for (_ in 0...nstrings) {
-            // Get the size of the string we are reading.
-            var stringSize = readVarUInt(buffer) + 1;
+		// We want to read every string, we know the amoutn from the passed parameter.
+		// Represents the stringsData array offset.
+		var arrayOffset = 0;
+		for (_ in 0...nstrings) {
+			// Get the size of the string we are reading.
+			var stringSize = readVarUInt(buffer) + 1;
 
-            // Decode the string from a slice, starting at the array offset and ending at the array offset + string length.
-            var str = Utils.stringFromBytes(stringData.slice(arrayOffset, arrayOffset + stringSize));
+			// Decode the string from a slice, starting at the array offset and ending at the array offset + string length.
+			var str = Utils.stringFromBytes(stringData.slice(arrayOffset, arrayOffset + stringSize));
 
-            strings.push(str);
-            arrayOffset += stringSize;
-        }
+			strings.push(str);
+			arrayOffset += stringSize;
+		}
 
-        return strings;
+		return strings;
 	}
+
+    // TODO: Actually test this implementation.
+	/**
+	 * Reads a collection of bytes given a known count.
+	 * @param buffer The buffer to read from.
+	 * @param nbytes The amount of bytes to read.
+	 * @return Array<Int> The collection of bytes.
+	 */
+	public function readBytes(buffer:Input, nbytes:Int):ByteData {
+        // Fill bytes array with all the bytes, given a size specified at the start.
+        var bytes = [];
+        var bytesSize = buffer.readInt32(); // LITTLE ENDIAN
+
+        for (_ in 0...bytesSize)
+            bytes.push(buffer.readByte()); // LITTLE ENDIAN
+
+        // guh
+        var bytesPos = [];
+        for (_ in 0...bytesSize)
+            bytesPos.push(readVarUInt(buffer)); // LITTLE ENDIAN
+
+        return {
+            bytesData: bytes,
+            bytesPos: bytesPos
+        };
+    }
 
 	// endregion
 }

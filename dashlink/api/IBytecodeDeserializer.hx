@@ -1,5 +1,6 @@
 package dashlink.api;
 
+import dashlink.structures.ByteData;
 import dashlink.structures.ContentStructure;
 import dashlink.structures.DataStructure;
 import dashlink.structures.MainStructure;
@@ -108,6 +109,14 @@ interface IBytecodeDeserializer {
 	 * @return Array<String> The collection of strings.
 	 */
 	function readStrings(buffer:Input, nstrings:Int):Array<String>;
+
+	/**
+	 * Reads a collection of bytes given a known count.
+	 * @param buffer The buffer to read from.
+	 * @param nbytes The amount of bytes to read.
+	 * @return Array<Int> The collection of bytes.
+	 */
+	function readBytes(buffer:Input, nbytes:Int):ByteData;
 
 	// endregion
 }
