@@ -235,6 +235,7 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 		var arrayOffset = 0;
 		for (_ in 0...nstrings) {
 			// Get the size of the string we are reading.
+            // The additional 1 is for the null terminator.
 			var stringSize = readVarUInt(buffer) + 1;
 
 			// Decode the string from a slice, starting at the array offset and ending at the array offset + string length.
