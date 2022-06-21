@@ -1,4 +1,4 @@
-package dashlink;
+package dashlink.util;
 
 class HlCodeDeserializer {
 	/**

@@ -1,5 +1,8 @@
 package dashlink.impl;
 
+import dashlink.util.Utils;
+import dashlink.util.HlCodeDeserializer;
+import dashlink.util.Assert;
 import dashlink.structures.DebugData;
 import dashlink.structures.ByteData;
 import dashlink.structures.ContentStructure;
