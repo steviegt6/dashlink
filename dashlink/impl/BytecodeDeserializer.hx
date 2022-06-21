@@ -144,20 +144,6 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 		throw new haxe.exceptions.NotImplementedException();
 	}
 
-	/**
-	 * Reads a strings block
-	 * 
-	 * https://github.com/Gui-Yom/hlbc/wiki/Bytecode-file-format#strings-block
-	 * @param buffer The buffer to read from.
-	 * @param nstrings The amount of strings to read.
-	 * @return Array<String>
-	 */
-	public function readStringsBlock(buffer:Input, nstrings:Int):Array<String> {
-		Assert.argumentNotNull(buffer, "buffer");
-
-		throw new haxe.exceptions.NotImplementedException();
-	}
-
 	// endregion
 	// region utility readers
 
