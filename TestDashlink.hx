@@ -1,15 +1,9 @@
-import dashlink.util.Utils;
+import dashlink.util.HlCodeDeserializer;
 import dashlink.impl.BytecodeDeserializer;
-import dashlink.api.IBytecodeDeserializer;
-import sys.io.File;
 
 class TestDashlink {
 	public static function main():Void {
-		var deserializer:IBytecodeDeserializer = new BytecodeDeserializer();
-		var bytes = File.getBytes("hello.hl");
-		var buffer = Utils.makeByteBuffer(bytes);
-		buffer.bigEndian = false; // We want little endian for deserialization..
-		var code = deserializer.readMainStructure(buffer);
+		var code = HlCodeDeserializer.deserializeFromPath("hello.hl", new BytecodeDeserializer());
 		trace(code);
 	}
 }

@@ -78,14 +78,14 @@ interface IBytecodeDeserializer {
 	 * @param buffer The buffer to read from.
 	 * @return Array<Int> A byte array containing the values of the read bytes.
 	 */
-	function readHeader(buffer:Input):Array<Int>;
+	public function readHeader(buffer:Input):Array<Int>;
 
 	/**
 	 * Reads the version of a file.
 	 * @param buffer The buffer to read from.
 	 * @return Int A byte representing the version.
 	 */
-	function readVersion(buffer:Input):Int;
+	public function readVersion(buffer:Input):Int;
 
 	/**
 	 * Reads a collection of int32s given a known count.
@@ -93,7 +93,7 @@ interface IBytecodeDeserializer {
 	 * @param nints The amount of int32s to read.
 	 * @return Array<Int> The collection of int32s.
 	 */
-	function readInts(buffer:Input, nints:Int):Array<Int>;
+	public function readInts(buffer:Input, nints:Int):Array<Int>;
 
 	/**
 	 * Reads a collection of float64s given a known count.
@@ -101,7 +101,7 @@ interface IBytecodeDeserializer {
 	 * @param nfloats The amount of float64s to read.
 	 * @return Array<Float> The collection of float64s.
 	 */
-	function readFloats(buffer:Input, nfloats:Int):Array<Float>;
+	public function readFloats(buffer:Input, nfloats:Int):Array<Float>;
 
 	/**
 	 * Reads and decodes a collection of strings given a known count.
@@ -109,7 +109,7 @@ interface IBytecodeDeserializer {
 	 * @param nstrings The amount of strings to read.
 	 * @return Array<String> The collection of strings.
 	 */
-	function readStrings(buffer:Input, nstrings:Int):Array<String>;
+	public function readStrings(buffer:Input, nstrings:Int):Array<String>;
 
 	/**
 	 * Reads a collection of bytes given a known count.
@@ -117,14 +117,14 @@ interface IBytecodeDeserializer {
 	 * @param nbytes The amount of bytes to read.
 	 * @return Array<Int> The collection of bytes.
 	 */
-	function readBytes(buffer:Input, nbytes:Int):ByteData;
+	public function readBytes(buffer:Input, nbytes:Int):ByteData;
 
 	/**
 	 * Reads debug data from a file.
 	 * @param buffer The buffer to read from.
 	 * @return DebugData The read debug data.
 	 */
-	function readDebug(buffer:Input):DebugData;
+	public function readDebug(buffer:Input):DebugData;
 
 	// endregion
 }
