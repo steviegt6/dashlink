@@ -261,7 +261,7 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 			var stringSize = readVarUInt(buffer) + 1;
 
 			// Decode the string from a slice, starting at the array offset and ending at the array offset + string length.
-			var str = Utils.stringFromBytes(stringData.slice(arrayOffset, arrayOffset + stringSize));
+			var str = HlCodeDeserializer.stringFromBytes(stringData.slice(arrayOffset, arrayOffset + stringSize));
 
 			strings.push(str);
 			arrayOffset += stringSize;
