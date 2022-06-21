@@ -67,6 +67,8 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 	// region main structure reading
 
 	public function readMainStructure(buffer:Input):MainStructure {
+		Assert.argumentNotNull(buffer, "buffer");
+
 		// TODO: Just set to little endian ourselves?
 		if (buffer.bigEndian)
 			throw new BytecodeDeserializationException("Big endian deserialization is not supported, use little endian");
@@ -86,6 +88,8 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 	 * @return DataStructure The read data.
 	 */
 	public function readDataStructure(buffer:Input):DataStructure {
+		Assert.argumentNotNull(buffer, "buffer");
+
 		var header = readHeader(buffer);
 		var version = readVersion(buffer);
 		var flags = readVarUInt(buffer);
@@ -115,7 +119,7 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 			nfunctions: nfunctions,
 			nconstants: nconstants,
 			entrypoint: entrypoint,
-            hasdebug: hasDebug
+			hasdebug: hasDebug
 		};
 	}
 
@@ -126,11 +130,14 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 	 * @return ContentStructure The read content.
 	 */
 	public function readContentStructure(buffer:Input, data:DataStructure):ContentStructure {
+		Assert.argumentNotNull(buffer, "buffer");
+		Assert.argumentNotNull(data, "data");
+
 		var ints = readInts(buffer, data.nints);
 		var floats = readFloats(buffer, data.nfloats);
 		var strings = readStrings(buffer, data.nstrings);
 		var bytes = data.version >= 5 ? readBytes(buffer, data.nbytes) : {bytesData: [], bytesPos: []};
-        var debugData = data.hasdebug ? readDebug(buffer) : { ndebugfiles: 0, debugfiles: [] };
+		var debugData = data.hasdebug ? readDebug(buffer) : {ndebugfiles: 0, debugfiles: []};
 		throw new haxe.exceptions.NotImplementedException();
 	}
 
@@ -143,6 +150,8 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 	 * @return Array<String>
 	 */
 	public function readStringsBlock(buffer:Input, nstrings:Int):Array<String> {
+		Assert.argumentNotNull(buffer, "buffer");
+
 		throw new haxe.exceptions.NotImplementedException();
 	}
 
@@ -155,6 +164,8 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 	 * @return Array<Int> A byte array containing the values of the read bytes.
 	 */
 	public function readHeader(buffer:Input):Array<Int> {
+		Assert.argumentNotNull(buffer, "buffer");
+
 		var header = [buffer.readByte(), buffer.readByte(), buffer.readByte()];
 
 		if (!Utils.arraysEqual(header, HlCodeDeserializer.magicHeader))
@@ -171,6 +182,8 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 	 * @return Int A byte representing the version.
 	 */
 	public function readVersion(buffer:Input):Int {
+		Assert.argumentNotNull(buffer, "buffer");
+
 		var version = buffer.readByte();
 
 		if (version < HlCodeDeserializer.minVersion)
@@ -189,6 +202,8 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 	 * @return Array<Int> The collection of int32s.
 	 */
 	public function readInts(buffer:Input, nints:Int):Array<Int> {
+		Assert.argumentNotNull(buffer, "buffer");
+
 		var ints = [];
 
 		for (_ in 0...nints)
@@ -204,6 +219,8 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 	 * @return Array<Float> The collection of float64s.
 	 */
 	public function readFloats(buffer:Input, nfloats:Int):Array<Float> {
+		Assert.argumentNotNull(buffer, "buffer");
+
 		var floats = [];
 
 		for (_ in 0...nfloats)
@@ -219,6 +236,8 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 	 * @return Array<String> The collection of strings.
 	 */
 	public function readStrings(buffer:Input, nstrings:Int):Array<String> {
+		Assert.argumentNotNull(buffer, "buffer");
+
 		var strings = [];
 
 		// Byte data representing every stored character.
@@ -235,7 +254,7 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 		var arrayOffset = 0;
 		for (_ in 0...nstrings) {
 			// Get the size of the string we are reading.
-            // The additional 1 is for the null terminator.
+			// The additional 1 is for the null terminator.
 			var stringSize = readVarUInt(buffer) + 1;
 
 			// Decode the string from a slice, starting at the array offset and ending at the array offset + string length.
@@ -257,6 +276,8 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 	 * @return Array<Int> The collection of bytes.
 	 */
 	public function readBytes(buffer:Input, nbytes:Int):ByteData {
+		Assert.argumentNotNull(buffer, "buffer");
+
 		// Fill bytes array with all the bytes, given a size specified at the start.
 		var bytes = [];
 		var bytesSize = buffer.readInt32(); // LITTLE ENDIAN
@@ -281,14 +302,16 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 	 * @return DebugData The read debug data.
 	 */
 	public function readDebug(buffer:Input):DebugData {
-        var ndebugfiles = readVarUInt(buffer);
-        var debugfiles = readStrings(buffer, ndebugfiles);
+		Assert.argumentNotNull(buffer, "buffer");
 
-        return {
-            ndebugfiles: ndebugfiles,
-            debugfiles: debugfiles
-        };
-    }
+		var ndebugfiles = readVarUInt(buffer);
+		var debugfiles = readStrings(buffer, ndebugfiles);
+
+		return {
+			ndebugfiles: ndebugfiles,
+			debugfiles: debugfiles
+		};
+	}
 
 	// endregion
 }

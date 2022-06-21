@@ -135,10 +135,15 @@ class Utils {
 	 * @return BufferInput
 	 */
 	public static function makeByteBuffer(bytes:Bytes):BufferInput {
+		Assert.argumentNotNull(bytes, "bytes");
+
 		return new BufferInput(new BytesInput(bytes), bytes);
 	}
 
 	public static function arraysEqual(array1:Array<Dynamic>, array2:Array<Dynamic>):Bool {
+		Assert.argumentNotNull(array1, "array1");
+		Assert.argumentNotNull(array2, "array2");
+
 		if (array1.length != array2.length)
 			return false;
 
@@ -151,6 +156,8 @@ class Utils {
 	}
 
 	public static function bytesFromArray(array:Array<UI8>):Bytes {
+		Assert.argumentNotNull(array, "array");
+
 		var bytes = Bytes.alloc(array.length);
 
 		for (i in 0...array.length) {
@@ -162,6 +169,8 @@ class Utils {
 
 	// TODO: Figure out how to use UnicodeString here.
 	public static function stringFromBytes(bytes:Array<Int>):String {
+		Assert.argumentNotNull(bytes, "bytes");
+
 		var str = "";
 
 		// Using String.fromCharCode normally does't work because of black magic.
