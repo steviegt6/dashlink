@@ -1,5 +1,6 @@
 package dashlink.api;
 
+import dashlink.structures.hl.HlConstant;
 import dashlink.structures.DebugData;
 import dashlink.structures.ByteData;
 import dashlink.structures.ContentStructure;
@@ -60,16 +61,6 @@ interface IBytecodeDeserializer {
 	 */
 	function readContentStructure(buffer:Input, data:DataStructure):ContentStructure;
 
-	/**
-	 * Reads a strings block
-	 * 
-	 * https://github.com/Gui-Yom/hlbc/wiki/Bytecode-file-format#strings-block
-	 * @param buffer The buffer to read from.
-	 * @param nstrings The amount of strings to read.
-	 * @return Array<String>
-	 */
-	function readStringsBlock(buffer:Input, nstrings:Int):Array<String>;
-
 	// endregion
 	// region utility readers
 
@@ -126,5 +117,12 @@ interface IBytecodeDeserializer {
 	 */
 	public function readDebug(buffer:Input):DebugData;
 
+	/**
+	 * Reads a collection of constants given a known count.
+	 * @param buffer The buffer to read from.
+	 * @param nconstants The amount of constants to read.
+	 * @return Array<HlConstant> The collection of constants.
+	 */
+	public function readConstants(buffer:Input, nconstants:Int):Array<HlConstant>;
 	// endregion
 }

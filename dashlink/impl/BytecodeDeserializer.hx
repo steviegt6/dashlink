@@ -1,5 +1,6 @@
 package dashlink.impl;
 
+import dashlink.structures.hl.HlConstant;
 import dashlink.util.Utils;
 import dashlink.util.HlCodeDeserializer;
 import dashlink.util.Assert;
@@ -141,7 +142,23 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 		var strings = readStrings(buffer, data.nstrings);
 		var bytes = data.version >= 5 ? readBytes(buffer, data.nbytes) : {bytesData: [], bytesPos: []};
 		var debugData = data.hasdebug ? readDebug(buffer) : {ndebugfiles: 0, debugfiles: []};
-		throw new haxe.exceptions.NotImplementedException();
+		var types = readTypes(buffer, data.ntypes); // hl_read_type
+		var globals = readGlobals(buffer, data.nglobals); // hl_get_type
+		var natives = readNatives(buffer, data.nnatives); // own block
+		var functions = readFunctions(buffer, data.nfunctions); // own block
+		var constants = readConstants(buffer, data.nconstants); // own block
+		return {
+			ints: ints,
+			floats: floats,
+			strings: strings,
+			bytes: bytes,
+			debug: debugData,
+			types: types,
+			globals: globals,
+			natives: natives,
+			functions: functions,
+			constants: constants
+		};
 	}
 
 	// endregion
@@ -300,6 +317,25 @@ class BytecodeDeserializer implements IBytecodeDeserializer {
 			ndebugfiles: ndebugfiles,
 			debugfiles: debugfiles
 		};
+	}
+
+	/**
+	 * Reads a collection of constants given a known count.
+	 * @param buffer The buffer to read from.
+	 * @param nconstants The amount of constants to read.
+	 * @return Array<HlConstant> The collection of constants.
+	 */
+	public function readConstants(buffer:Input, nconstants:Int):Array<HlConstant> {
+		Assert.argumentNotNull(buffer, "buffer");
+
+		var constants = [];
+
+		for (_ in 0...nconstants) {
+			var j;
+			
+		}
+
+		return constants;
 	}
 
 	// endregion

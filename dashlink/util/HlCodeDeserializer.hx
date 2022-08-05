@@ -67,6 +67,7 @@ class HlCodeDeserializer {
 	}
 
 	// TODO: Figure out how to use UnicodeString here.
+	// TODO: Enforce strings endering in null terminators?
 	public static function stringFromBytes(bytes:Array<Int>):String {
 		Assert.argumentNotNull(bytes, "bytes");
 
