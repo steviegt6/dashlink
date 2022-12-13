@@ -4,9 +4,9 @@
 
 # **_dashlink_**
 
-<h6>A HashLink bytecode disassembler, inspector, and writer.</h6>
+> HashLink bytecode disassembler, assembly, and inspector.
 
-Dashlink, stylized as **dashlink**, is a disassembler for [HashLink](https://github.com/HaxeFoundation/hashlink) bytecode developed with the goal of allowing users to dump HL bytecode, rewrite compiled code, and create compiled bytecode from scratch -- all through the power of a Haxe library.
+Dashlink, stylized as **_dashlink_**, is a disassembler and assembler for [HashLink](https://github.com/HaxeFoundation/hashlink) bytecode developed with the goal of allowing users to dump HL bytecode, rewrite compiled code, and create compiled bytecode from scratch -- all through the power of a Haxe library.
 
 ## Practical Uses
 
