@@ -3,25 +3,24 @@ name: dotnet buidl
 on: [push]
 
 jobs:
-    build:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+      dotnet-version: '7.0.x'
 
-runs-on: ubuntu-latest
-strategy:
-    matrix:
-        dotnet-version: '7.0.x'
-
-steps:
-    - uses: actions/checkout@v3
-      - name: Setup .NET SDK ${{ matrix.dotnet-version }}
+      steps:
+        - uses: actions/checkout@
+        - name: Setup .NET SDK ${{ matrix.dotnet-version }}
         uses: actions/setup-dotnet@v3
         with:
-            dotnet-version: ${{ matrix.dotnet-version }}
+          dotnet-version: ${{ matrix.dotnet-version }}
 
-      - name: Install dependencies
-        run: dotnet restore
+        - name: Install dependencies
+          run: dotnet restore
 
-      - name: Build
-        run: dotnet build "./src/Tomat.Dashlink.sln" --configuration Release --no-restore
+        - name: Build
+          run: dotnet build "./src/Tomat.Dashlink.sln" --configuration Release --no-restore
 
-      - name: Test
-        run: dotnet test "./src/Tomat.Dashlink.sln" --no-restore --verbosity normal
+        - name: Test
+          run: dotnet test "./src/Tomat.Dashlink.sln" --no-restore --verbosity normal
