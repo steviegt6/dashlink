@@ -1,2 +1,4 @@
-# Built HashLink file(s).
+.idea/
+
 bin/
+obj/
