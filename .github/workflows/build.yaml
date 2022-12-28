@@ -1,0 +1,24 @@
+name: build and test
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup .NET SDK ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.0.x'
+
+      - name: Install dependencies
+        run: dotnet restore "./src/Tomat.Dashlink.sln"
+
+      - name: Build
+        run: dotnet build "./src/Tomat.Dashlink.sln" --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test "./src/Tomat.Dashlink.sln" --no-restore --verbosity normal
