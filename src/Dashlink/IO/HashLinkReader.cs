@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+using System.IO;
 using System.Text;
 
 namespace Dashlink.IO;
@@ -47,5 +49,40 @@ public class HashLinkReader : BinaryReader {
             throw new IOException(VAR_UINT_NEGATIVE_EXCEPTION);
 
         return (uint) i;
+    }
+
+    public virtual List<string> ReadStrings(uint nstrings) {
+        // Collection of constructed strings to be returned at the end of this
+        // method.
+        var strings = new List<string>();
+        
+        // The number of bytes making up all strings.
+        var byteCount = ReadInt32();
+        
+        // Bytes representing every stored character.
+        var stringBytes = ReadBytes(byteCount);
+
+        // We want to read every string, we know the the amount from the passed
+        // parameter.
+        
+        // Represents the absolute stringBytes offset.
+        var offset = 0;
+
+        for (var i = 0; i < nstrings; i++) {
+            // Get the size of the string we are reading, add one to account for
+            // the null terminator.
+            // Cast unsigned down to signed because we know that they can't actually be
+            // greater than int.MaxValue.
+            var size = (int) ReadVarUInt32() + 1;
+            
+            // Decode the string from a slice, starting at the array offset and
+            // ending at the array offset + string length.
+            var str = Encoding.UTF8.GetString(stringBytes, offset, size);
+            
+            strings.Add(str);
+            offset += size;
+        }
+        
+        return strings;
     }
 }
