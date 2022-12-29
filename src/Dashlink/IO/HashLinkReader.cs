@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.Contracts;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -10,8 +10,14 @@ namespace Dashlink.IO;
 // keep this in mind while reading.
 // This is especially important when reading variable length integers.
 public class HashLinkReader : BinaryReader {
+    public const int MIN_VERSION = 2;
+    public const int MAX_VERSION = 5;
+
     public const string VAR_UINT_NEGATIVE_EXCEPTION =
         "Variable-length unsigned 32-bit integer cannot be negative!";
+
+    public const string UNSUPPORTED_VERSION_EXCEPTION =
+        "Unsupported version: {0}, only versions {1}-{2} are supported.";
 
     public HashLinkReader(Stream input)
         : base(input) { }
@@ -77,12 +83,59 @@ public class HashLinkReader : BinaryReader {
             
             // Decode the string from a slice, starting at the array offset and
             // ending at the array offset + string length.
-            var str = Encoding.UTF8.GetString(stringBytes, offset, size);
+            var str = Encoding.UTF8.GetString(stringBytes, offset, size - 1);
             
             strings.Add(str);
             offset += size;
         }
         
         return strings;
+    }
+
+    public virtual HashLinkFile ReadHashLinkFile() {
+        T[] ReadArray<T>(uint length, Func<T> readFunc) {
+            var array = new T[length];
+            for (var i = 0; i < length; i++)
+                array[i] = readFunc();
+
+            return array;
+        }
+
+        // Read and validate magic header "HLB".
+        var magic = ReadBytes(3);
+        if (magic[0] != 72 || magic[1] != 76 || magic[2] != 66)
+            throw new IOException("Invalid magic header!");
+
+        var code = new HashLinkFile();
+
+        var version    = ReadByte();
+        if (version is < MIN_VERSION or > MAX_VERSION)
+            throw new IOException(
+                string.Format(
+                    UNSUPPORTED_VERSION_EXCEPTION,
+                    version,
+                    MIN_VERSION,
+                    MAX_VERSION
+                )
+            );
+        
+        var flags      = ReadVarUInt32();
+        var nints      = ReadVarUInt32();
+        var nfloats    = ReadVarUInt32();
+        var nstrings   = ReadVarUInt32();
+        var nbytes     = version >= 5 ? ReadVarUInt32() : 0;
+        var ntypes     = ReadVarUInt32();
+        var nglobals   = ReadVarUInt32();
+        var nnatives   = ReadVarUInt32();
+        var nfunctions = ReadVarUInt32();
+        var nconstants = version >= 4 ? ReadVarUInt32() : 0;
+        var entrypoint = ReadVarUInt32();
+        var hasDebug   = flags & 1;
+
+        var ints    = ReadArray(nints, ReadInt32);
+        var floats  = ReadArray(nfloats, ReadDouble);
+        var strings = ReadStrings(nstrings);
+
+        return code;
     }
 }
